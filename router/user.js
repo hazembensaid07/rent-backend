@@ -1,5 +1,10 @@
 const express = require("express");
-const { Register, Login } = require("../controllers/user.controllers");
+const {
+  Register,
+  Login,
+  updatePassword,
+  updateUser,
+} = require("../controllers/user.controllers");
 const isAuth = require("../middleware/isAuth");
 const {
   validation,
@@ -38,6 +43,19 @@ public
 router.get("/current", isAuth, (req, res) => {
   res.send({ msg: "authorized", user: req.user });
 });
-
+/*
+@method: POST
+@ path:http:localhost:5000/api/user/updateUser
+@ parameter: req.body  
+public
+*/
+router.post("/updateUser", isAuth, updateUser);
+/*
+@method: POST
+@ path:http:localhost:5000/api/user/updatePassword
+@ parameter: req.body  
+public
+*/
+router.post("/updatepassword", isAuth, updatePassword);
 // default export
 module.exports = router;

@@ -1,10 +1,13 @@
 const { validationResult, check } = require("express-validator");
 
 exports.registerValidate = () => [
-  check("name", "name is required").notEmpty(),
+  check("username", "username is required").notEmpty(),
   check("email", "should be email").isEmail(),
   check("password", "password is required").notEmpty(),
   check("password", "enter a valid password").isLength({ min: 6 }),
+  check("firstname", "fisrtname is required").notEmpty(),
+  check("lastname", "lastname is required").notEmpty(),
+  check("address", "address is required").notEmpty(),
 ];
 exports.loginValidate = () => [
   check("email", "should be email").isEmail(),

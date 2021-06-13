@@ -4,9 +4,10 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 exports.Register = async (req, res) => {
+  console.log('registerController');
   try {
     // req.body= name , email , password , phone
-    const { email, password } = req.body;
+    const { username, email, password, firstname, lastname, adress } = req.body;
     // test email
     const findUser = await User.findOne({ email });
     // email should be unique
@@ -72,5 +73,33 @@ exports.Login = async (req, res) => {
     res.status(500).send({ errors: [{ msg: "can not login" }] });
   }
 };
-
-// module.exports = { Register,  };
+// w hne tab3athli username w favorits kahaw
+exports.updateUser = async (req, res) => {
+  try {
+    const newUser = {
+      ...req.user,
+      username: req.body.username,
+      favorits: req.body.favorits,
+    };
+    const result = await User.updateOne(
+      { _id: req.user._id },
+      { $set: { ...newUser } }
+    );
+    result.nModified ? res.send("updated") : res.send("user already updated");
+  } catch (error) {
+    res.status(400).send("No user exist with that ID");
+  }
+};
+//hne tabaathli ken newPassword fel req.body
+exports.updatePassword = async (req, res) => {
+  try {
+    const newUser = { ...req.user, password: req.body.newPassword };
+    const result = await User.updateOne(
+      { _id: req.user._id },
+      { $set: { ...newUser } }
+    );
+    result.nModified ? res.send("updated") : res.send("user already updated");
+  } catch (error) {
+    res.status(400).send("No user exist with that ID");
+  }
+};
