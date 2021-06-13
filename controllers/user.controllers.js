@@ -4,6 +4,7 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 exports.Register = async (req, res) => {
+  console.log('registerController');
   try {
     // req.body= name , email , password , phone
     const { username, email, password, firstname, lastname, adress } = req.body;
