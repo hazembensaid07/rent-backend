@@ -75,7 +75,11 @@ exports.Login = async (req, res) => {
 // w hne tab3athli username w favorits kahaw
 exports.updateUser = async (req, res) => {
   try {
-    const newUser = { ...req.user, username: req.body.username };
+    const newUser = {
+      ...req.user,
+      username: req.body.username,
+      favorits: req.body.favorits,
+    };
     const result = await User.updateOne(
       { _id: req.user._id },
       { $set: { ...newUser } }

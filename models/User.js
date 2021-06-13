@@ -9,6 +9,7 @@ const userSchema = new Schema({
   address: { type: String, required: true },
   admin: Boolean,
   favorits: Array,
+
   phone: Number,
 });
 

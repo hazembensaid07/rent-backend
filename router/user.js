@@ -49,7 +49,7 @@ router.get("/current", isAuth, (req, res) => {
 @ parameter: req.body  
 public
 */
-router.post("/updatePassword", isAuth, updateUser);
+router.post("/updateUser", isAuth, updateUser);
 /*
 @method: POST
 @ path:http:localhost:5000/api/user/updatePassword

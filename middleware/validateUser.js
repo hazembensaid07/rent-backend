@@ -7,7 +7,7 @@ exports.registerValidate = () => [
   check("password", "enter a valid password").isLength({ min: 6 }),
   check("firstname", "fisrtname is required").notEmpty(),
   check("lastname", "lastname is required").notEmpty(),
-  check("adress", "adress is required").notEmpty(),
+  check("address", "address is required").notEmpty(),
 ];
 exports.loginValidate = () => [
   check("email", "should be email").isEmail(),
