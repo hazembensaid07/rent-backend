@@ -18,12 +18,15 @@ app.use((req, res, next) => {
 const carRouter = require("./router/Car");
 const rentRouter = require("./router/Rental");
 const userRouter = require("./router/user");
+const mailRouter = require("./router/Mail");
+
 // router
 // user
 app.use(express.json());
 app.use("/api/user", userRouter);
 app.use("/car", carRouter);
 app.use("/Rent", rentRouter);
+app.use("/mail",mailRouter);
 
 // PORT
 const PORT = process.env.PORT;
