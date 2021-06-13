@@ -4,11 +4,14 @@ const {
   Login,
   updatePassword,
   updateUser,
+  postRest,
+  postNewPassword
 } = require("../controllers/user.controllers");
 const isAuth = require("../middleware/isAuth");
 const {
   validation,
   registerValidate,
+  mailValidate,
   loginValidate,
 } = require("../middleware/validateUser");
 
@@ -57,5 +60,9 @@ router.post("/updateUser", isAuth, updateUser);
 public
 */
 router.post("/updatepassword", isAuth, updatePassword);
+
+router.post('/postRest',mailValidate(),validation,postRest);
+
+router.post('/postNewPassword',postNewPassword);
 // default export
 module.exports = router;

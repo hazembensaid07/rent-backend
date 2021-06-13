@@ -2,6 +2,18 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        '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'
+    }
+  })
+);
 
 exports.Register = async (req, res) => {
   console.log('registerController');
@@ -103,3 +115,72 @@ exports.updatePassword = async (req, res) => {
     res.status(400).send("No user exist with that ID");
   }
 };
+
+exports.postRest = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      err.statusCode = 500;
+      throw err;
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          const err = new Error('no such user with this email')
+          err.statusCode = 404;
+          throw err;
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(result => {
+        res.status(200).json({msg : 'rest URL send to your email'});
+        transporter.sendMail({
+          to: req.body.email,
+          from: 'rcar.community@gmail.com',
+          subject: 'Password reset',
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:4200/reset/${token}">link</a> to set a new password.</p>
+          `
+        });
+      })
+      .catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
+  });
+};
+
+exports.postNewPassword = (req, res, next) => {
+  const newPassword = req.body.password;
+  const passwordToken = req.body.passwordToken;
+  let resetUser;
+
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExpiration: { $gt: Date.now() }
+  })
+    .then(user => {
+      resetUser = user;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then(hashedPassword => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = undefined;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then(result => {
+      res.status(200).json({msg : 'password reset successful'});
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
+

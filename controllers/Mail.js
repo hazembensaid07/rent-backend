@@ -1,30 +1,38 @@
-const nodemailer = require('nodemailer');
-const sendGridTransport = require('nodemailer-sendgrid-transport');
-const { getMaxListeners } = require('../models/Car');
 
-const transporter = nodemailer.createTransport(sendGridTransport({
-    auth  : {
-        api_key : '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'
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
+// const { validationResult } = require('express-validator/check');
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        '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'
     }
-}))
+  })
+);
 
 exports.sendMail = (req,res,next) => {
     const sender = req.body.email;
-    const username = req.body.username;
-    const content = req.body.content;
-    try {
+    const username = req.body.name;
+    const content = req.body.message;
     transporter.sendMail({
-        to : 'rcar.community@gmail.com',
-        from : 'rcar.community@gmail.com',
-        subject : 'mail from visitor',
-        html : `<h1> from ${sender}, M/Ms ${username} </h1>
-                 <p> ${content}</p> `
+        to: 'haythembensalah26@gmail.com',
+        from: 'rcar.community@gmail.com',
+        subject: 'mail from visitor',
+        html: `
+          <h2>From ${sender}, M/Ms ${username}</h2>
+          <p>${content}</p>
+        `
+      }).then(result => {
+        console.log(result);
+        res.status(200).json({msg : 'mail send successfully'});  
     })
-    res.status(200).json({msg : 'mail send successfully'});
-    }catch(err ){
+    .catch(err => {
+        console.log(err)
         err.statusCode = 500;
         throw err
 
-    }
+    })
 
 }

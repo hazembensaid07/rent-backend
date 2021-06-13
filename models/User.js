@@ -9,6 +9,8 @@ const userSchema = new Schema({
   address: { type: String, required: true },
   admin: Boolean,
   favorits: Array,
+  resetToken: String,
+  resetTokenExpiration: Date,
 
   phone: Number,
 });
