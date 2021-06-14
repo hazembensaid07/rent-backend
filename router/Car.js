@@ -1,10 +1,11 @@
 const express = require('express');
 const route = express.Router();
 const carController = require('../controllers/Car');
+const isAuth = require("../middleware/isAuth");
 
-route.post('/addCar',carController.addCar);
+route.post('/addCar',isAuth,carController.addCar);
 route.get('/cars/:carId',carController.getCars);
-route.delete('/car/:carId',carController.deleteCar);
+route.delete('/car/:carId',isAuth,carController.deleteCar);
 
 
 

@@ -7,7 +7,10 @@ const userSchema = new Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   address: { type: String, required: true },
-  admin: Boolean,
+  admin: {
+    type : Boolean,
+    default : false
+  },
   favorits: Array,
   resetToken: String,
   resetTokenExpiration: Date,

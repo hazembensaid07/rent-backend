@@ -61,7 +61,7 @@ public
 */
 router.post("/updatepassword", isAuth, updatePassword);
 
-router.post('/postRest',mailValidate(),validation,postRest);
+router.post('/postReset',mailValidate(),validation,postRest);
 
 router.post('/postNewPassword',postNewPassword);
 // default export
