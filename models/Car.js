@@ -51,7 +51,6 @@ const carSchema = new Schema({
     likes : { 
         nb :{
             type : Number ,
-            required : true,
             default :0
         },
         client: [{ 
