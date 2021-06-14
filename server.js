@@ -8,6 +8,8 @@ require("dotenv").config();
 
 connectDB();
 
+app.set('view engine', 'ejs');
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin','*');
   res.setHeader('Access-Control-Allow-Methods','GET , POST , DELETE , PUT , PATCH , OPTIONS');

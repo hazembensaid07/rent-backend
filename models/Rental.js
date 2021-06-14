@@ -20,6 +20,9 @@ price : {
 },
 user : { type : Schema.Types.ObjectId , required : true, ref : 'User' },
 
+pay : { type : Boolean, default : false},
+token : String
+
 })
 
 module.exports= mongoose.model('Rental',rentalSchema);
