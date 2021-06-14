@@ -4,7 +4,7 @@ const carController = require('../controllers/Car');
 const isAuth = require("../middleware/isAuth");
 
 route.post('/addCar',isAuth,carController.addCar);
-route.get('/cars/:carId',carController.getCars);
+route.get('/cars/:page',carController.getCars);
 route.delete('/car/:carId',isAuth,carController.deleteCar);
 
 

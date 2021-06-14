@@ -22,7 +22,7 @@ exports.addCar = (req, res, next) => {
 
 }
 exports.getCars = (req,res,next) => {
-    const pageNumber = req.params.page;
+    const pageNumber = req.params.page || 1;
     const itemsNumber = 6;
     Car.find()
     .skip((pageNumber-1)*itemsNumber)
