@@ -7,18 +7,18 @@ const rentalSchema =new Schema({
      ref : 'Car'
  },
  start_rental : {
-     type: Date,
+     type: String,
      required : true
  },
  end_rental : {
-    type: Date,
+    type: String,
     required : true
 },
 price : {
     type: Number,
     required : true
 },
-user : { type : Schema.Types.ObjectId , required : true, ref : 'User' },
+user : { type : Schema.Types.ObjectId ,  ref : 'User' },
 
 pay : { type : Boolean, default : false},
 token : String

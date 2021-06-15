@@ -3,7 +3,7 @@ const Car = require('../models/Car');
 exports.addCar = (req, res, next) => {
          if(!req.user.admin)
         { 
-            const err = new Error('you are not authorized to delete');
+            const err = new Error('you are not authorized to Add');
             err.statusCode=403;
             throw err;
         }

@@ -9,6 +9,7 @@ require("dotenv").config();
 connectDB();
 
 app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin','*');
@@ -27,7 +28,7 @@ const mailRouter = require("./router/Mail");
 app.use(express.json());
 app.use("/api/user", userRouter);
 app.use("/car", carRouter);
-app.use("/Rent", rentRouter);
+app.use("/rent", rentRouter);
 app.use("/mail",mailRouter);
 
 // PORT

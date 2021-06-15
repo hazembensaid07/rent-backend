@@ -12,6 +12,7 @@ const transporter = nodemailer.createTransport(
   })
 );
 
+
 exports.sendMail = (req,res,next) => {
     const sender = req.body.email;
     const username = req.body.name;
