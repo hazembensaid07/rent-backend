@@ -11,7 +11,6 @@ const userSchema = new Schema({
     type : Boolean,
     default : false
   },
-  favorits: Array,
   resetToken: String,
   resetTokenExpiration: Date,
 

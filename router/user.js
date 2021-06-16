@@ -59,7 +59,7 @@ router.post("/updateUser", isAuth, updateUser);
 @ parameter: req.body  
 public
 */
-router.post("/updatepassword", isAuth, updatePassword);
+router.put("/updatepassword", isAuth, updatePassword);
 
 router.post('/postReset',mailValidate(),validation,postRest);
 

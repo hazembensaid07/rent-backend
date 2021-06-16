@@ -90,8 +90,7 @@ exports.updateUser = async (req, res) => {
   try {
     const newUser = {
       ...req.user,
-      username: req.body.username,
-      favorits: req.body.favorits,
+      username: req.body.username
     };
     const result = await User.updateOne(
       { _id: req.user._id },
