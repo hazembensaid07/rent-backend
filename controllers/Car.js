@@ -21,18 +21,27 @@ exports.addCar = (req, res, next) => {
     })
 
 }
-exports.getCars = (req,res,next) => {
-    const pageNumber = req.params.page || 1;
-    const itemsNumber = 6;
-    Car.find()
-    .skip((pageNumber-1)*itemsNumber)
-    .limit(itemsNumber)
-    .then(cars => {
-        res.status(200).json({cars: cars});
-    }).catch(err => {
-        err.statusCode = 500;
-        throw err
-    })
+exports.getCars = async (req,res,next) => {
+    const currentPage = req.params.page || 1;
+    const perPage = 6;
+    let total;
+    try{
+    const totalItems = await Car.find().countDocuments()
+    total = totalItems
+    const cars = await Car.find()
+        .skip((currentPage -1)*perPage)
+        .limit(perPage)
+        res.status(200).json({
+            cars : cars,
+            totalItems : total
+        })
+    } catch (err) {
+        if(!err.statusCode)
+        {
+            err.statusCode = 500;
+        }
+        next(err);
+    };
 }
 
 exports.deleteCar = (req, res, next) => {

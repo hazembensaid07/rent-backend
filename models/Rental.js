@@ -14,6 +14,10 @@ const rentalSchema =new Schema({
     type: String,
     required : true
 },
+durations : {
+    type: Number,
+    required : true
+},
 price : {
     type: Number,
     required : true

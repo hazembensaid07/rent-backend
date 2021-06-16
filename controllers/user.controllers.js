@@ -88,27 +88,36 @@ exports.Login = async (req, res) => {
 // w hne tab3athli username w favorits kahaw
 exports.updateUser = async (req, res) => {
   try {
-    const newUser = {
-      ...req.user,
-      username: req.body.username
-    };
-    const result = await User.updateOne(
-      { _id: req.user._id },
-      { $set: { ...newUser } }
-    );
+    // const newUser = {
+    //   ...req.user,
+    //   username: req.body.username
+    // };
+    const userUpdate = req.user
+    userUpdate.username = req.body.username;
+    const result = await userUpdate.save();
+    // User.updateOne(
+    //   { _id: req.user._id },
+    //   { $set: { ...newUser } }
+    // );
     result.nModified ? res.send("updated") : res.send("user already updated");
   } catch (error) {
+    console.log('catch error');
     res.status(400).send("No user exist with that ID");
   }
 };
 //hne tabaathli ken newPassword fel req.body
 exports.updatePassword = async (req, res) => {
   try {
-    const newUser = { ...req.user, password: req.body.newPassword };
-    const result = await User.updateOne(
-      { _id: req.user._id },
-      { $set: { ...newUser } }
-    );
+    // const newUser = { ...req.user, password: req.body.newPassword };
+    const userUpdate = req.user;
+    const hashedpassword = await bcrypt.hash(req.body.newPassword, saltRounds);
+    userUpdate.password = hashedpassword;
+    const result = await userUpdate.save();
+
+    // const result = await User.updateOne(
+    //   { _id: req.user._id },
+    //   { $set: { ...newUser } }
+    // );
     result.nModified ? res.send("updated") : res.send("user already updated");
   } catch (error) {
     res.status(400).send("No user exist with that ID");

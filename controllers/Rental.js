@@ -4,6 +4,7 @@ const User = require('../models/User');
 const crypto = require("crypto");
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const { cachedDataVersionTag } = require('v8');
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
@@ -15,21 +16,32 @@ const transporter = nodemailer.createTransport(
 );
 const stripe = require('stripe')('sk_test_51IuQbSCxbz7I0xpYMwZ4jdwVYHj0UAiK8Hoeu1z8XotIs6jTqz1DZ3B26Ow89agnUxP3YD2HLDyyAppYdCl7i6rM00S8UgoUbf');
 exports.getRent = (req, res, next) => {
+        let car;
+        let cars=[];
+        let rentals;
+
     if(req.user.admin)
     { 
-        Rental.find({pay : true}).then(result => {
-            res.status(200).json({rentlas : result});
+        console.log('in admin user get rental');
+        Rental.find({pay : true}).populate('car').then(result => {
+            // console.log(result);
+            rentals = result;
+            res.status(200).json({rentals : rentals});
         }).catch((err) => {
             err.statusCode = 500;
             throw err;
         })  
+    }else {
+        console.log('in get simple user');
+        Rental.find({user : req.user._id,pay : true}).populate('car').then(result => {
+            rentals = result;
+            res.status(200).json({rentlas : rentals});
+        }).catch((err) => {
+            err.statusCode = 500;
+            throw err;
+        })
     }
-    Rental.find({user : req.user._id,pay : true}).then(result => {
-        res.status(200).json({rentlas : result});
-    }).catch((err) => {
-        err.statusCode = 500;
-        throw err;
-    })
+    
 
 };
 
@@ -52,7 +64,7 @@ exports.payment= (req, res, next) => {
     }
     const carId = req.body.carId;
     const start_rental = new Date(req.body.start_rental);
-    const end_rental = new Date(req.body.end_rent);
+    const end_rental = new Date(req.body.end_rental);
     const client = req.user;
     let sumPrice;
     const nbOfDays =req.body.duration;
@@ -71,6 +83,7 @@ exports.payment= (req, res, next) => {
             car : carDoc._id,
             start_rental : start_rental.toString(),
             end_rental : end_rental.toString(),
+            durations : nbOfDays,
             price : carDoc.price,
             user : client._id,
             token : token
