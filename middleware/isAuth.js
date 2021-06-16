@@ -1,41 +1,32 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const isAuth = async (req, res, next) => {
-  console.log('in Auth middleware');
-  try {
-    //    import token
-    // headers=> authorization
-    const token = req.headers["authorization"];
-    // console.log(token);
-    //   si mathamch token
-    if (!token) {
-      console.log('no token')
-      return res
-        .status(401)
-        .send({ errors: [{ msg: "you are not authorized1" }] });
-    }
-    // you are not authorized
-    // on doit verifie si token est valide
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    console.log('decode id  : '+ decode.id);
-    // test if the user exist with that id
-    const user = await User.findOne({ _id: decoded.id }).select("-password");
-    // you are not authorised
-    if (!user) {
-      return res
-        .status(401)
-        .send({ errors: [{ msg: "you are not authorized2" }] });
-    }
+const jwt = require('jsonwebtoken');
+const User =require('../models/User'); 
 
-    // si non
-    // req bech nzid user
-    req.user = user;
-    // next
-    next();
-  } catch (error) {
-    console.log('catch from try');
-    res.status(401).send({ errors: [{ msg: "you are not authorized" }] });
-  }
-};
-
-module.exports = isAuth;
+module.exports =(req,res,next) => {
+    const authHeader = req.get('Authorization');
+    if(!authHeader){
+        const error = new Error('not Authenticated');
+        error.statusCode =401;
+        throw error;
+    }
+    const token = authHeader.split(' ')[1];
+    let decodeToken;
+    try {
+        decodeToken = jwt.verify(token,'mysecretkey');
+    }catch(e) {
+        e.statusCode = 500;
+        throw e;
+    }
+    if(!decodeToken){
+        const error = new Error('not Authenticated');
+        error.statusCode = 401;
+        throw error;
+    }
+    User.findOne({_id : decodeToken.id}).then(userLog => {
+      req.user = userLog;
+      next();
+    }).catch((err) =>{
+    err.statusCode = 500;
+    throw err;
+    });
+    
+}
