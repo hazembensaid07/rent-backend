@@ -33,9 +33,9 @@ exports.getRent = (req, res, next) => {
         })  
     }else {
         console.log('in get simple user');
-        Rental.find({user : req.user._id,pay : true}).populate('car').then(result => {
+        Rental.find({$and:[{user : req.user._id},{pay : true}]}).populate('car').then(result => {
             rentals = result;
-            res.status(200).json({rentlas : rentals});
+            res.status(200).json({rentals : rentals});
         }).catch((err) => {
             err.statusCode = 500;
             throw err;
